@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    ports:
+      - 8008:8008
+    volumes:
+        - ./src/:/opt/app/
+    environment:
+      DB_CREDENTIALS: '{"password": "pawel.123","dbname": "mbd-db","port": 5435,"host": "db","username": "pawel"}'
+  db:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_DB=mbd-db
+      - POSTGRES_USER=pawel
+      - POSTGRES_PASSWORD=pawel.123
+    expose:
+      - "5435"
+    ports:
+      - "5435:5435"
+    command: -p 5435
+    volumes:
+      - mbd_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: /usr/bin/pg_isready
+      interval: 5s
+      timeout: 10s
+      retries: 120
+
+volumes:
+  mbd_data:
