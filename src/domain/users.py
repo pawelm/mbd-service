@@ -1,6 +1,4 @@
-from typing import Optional
-from pydantic import BaseModel
-from .base import Entity
+from pydantic import BaseModel, Field
 
 
 class UserBase(BaseModel):
@@ -15,4 +13,4 @@ class User(UserBase):
 
 
 class UserCreate(UserBase):
-    password: str
+    password: str = Field(..., min_length=10)
