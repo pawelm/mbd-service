@@ -15,6 +15,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(length=512), nullable=False, unique=True)
     _password = Column("password", Unicode(length=512), nullable=False)
+    posts = relationship("Post")
 
     @hybrid_property
     def password(self):

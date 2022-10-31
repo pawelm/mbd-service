@@ -7,8 +7,7 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
 
     DB_CREDENTIALS: str = os.environ["DB_CREDENTIALS"]
-    # 60 minutes * 24 hours * 8 days = 8 days
-    ACCESS_TOKEN_TTL: int = 60 * 24 * 8
+    ACCESS_TOKEN_TTL: int = 60 * 24
     SECRET_KEY: str = secrets.token_urlsafe(32)
 
 
