@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Response
 from fastapi import status as status_code
+from starlette.responses import JSONResponse
 
 from adapters.out.db.db_connection import create_session
 from adapters.out.db.users_repository import UsersRepository
@@ -19,10 +20,16 @@ router = APIRouter()
 async def register_user(user: UserCreate):
     async with create_session() as dbsession:
         use_case = RegisterUserUsecase(UsersRepository(dbsession))
-        result = await use_case.execute(
-            {"username": user.name, "password": user.password}
-        )
-        return result
+        try:
+            result = await use_case.execute(
+                {"username": user.name, "password": user.password}
+            )
+        except RuntimeError:
+            return JSONResponse(
+                content={"message": "User already exists"}, status_code=400
+            )
+        else:
+            return result
 
 
 @router.get(
